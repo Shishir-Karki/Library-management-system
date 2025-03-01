@@ -6,22 +6,19 @@ const MembershipSchema = new mongoose.Schema({
     required: true,
     unique: true
   },
-  name: {
-    type: String,
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
     required: true
   },
-  email: {
+  type: {
     type: String,
-    required: true
-  },
-  duration: {
-    type: String,
-    enum: ['6', '12', '24'],
-    default: '6'
+    enum: ['standard', 'premium', 'student'],
+    default: 'standard'
   },
   startDate: {
     type: Date,
-    default: Date.now
+    required: true
   },
   endDate: {
     type: Date,
@@ -29,8 +26,12 @@ const MembershipSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['active', 'cancelled'],
+    enum: ['active', 'expired', 'pending'],
     default: 'active'
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now
   }
 });
 

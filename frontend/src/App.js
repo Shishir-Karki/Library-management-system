@@ -26,6 +26,10 @@ import UpdateBook from './pages/Maintenance/UpdateBook';
 
 // Membership Components
 import MembershipManagement from './components/membership/MembershipForm';
+import UserMemberships from './components/membership/UserMemberships';
+
+// User Management
+import UserManagement from './pages/Maintenance/UserManagement';
 
 // Placeholder components for routes that don't have implementations yet
 const Transactions = () => (
@@ -42,17 +46,6 @@ const Transactions = () => (
 const Reports = () => (
   <div className="container mx-auto p-8">
     <h1 className="text-3xl font-bold mb-6">Reports</h1>
-    <div className="bg-yellow-100 border-l-4 border-yellow-500 p-4">
-      <p className="text-yellow-700">
-        This feature is coming soon. Check back later!
-      </p>
-    </div>
-  </div>
-);
-
-const UserManagement = () => (
-  <div className="container mx-auto p-8">
-    <h1 className="text-3xl font-bold mb-6">User Management</h1>
     <div className="bg-yellow-100 border-l-4 border-yellow-500 p-4">
       <p className="text-yellow-700">
         This feature is coming soon. Check back later!
@@ -150,6 +143,16 @@ function App() {
                 element={
                   <ProtectedRoute adminOnly>
                     <UserManagement />
+                  </ProtectedRoute>
+                } 
+              />
+
+              {/* Membership Routes */}
+              <Route 
+                path="/my-memberships" 
+                element={
+                  <ProtectedRoute>
+                    <UserMemberships />
                   </ProtectedRoute>
                 } 
               />

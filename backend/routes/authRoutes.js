@@ -19,6 +19,7 @@ router.post("/register", async (req, res) => {
     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: "1h" });
     res.json({ token, user: { id: user.id, name: user.name, email: user.email, role: user.role } });
   } catch (error) {
+    console.error("Register error:", error);
     res.status(500).json({ msg: "Server error" });
   }
 });
@@ -36,6 +37,7 @@ router.post("/login", async (req, res) => {
     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: "1h" });
     res.json({ token, user: { id: user.id, name: user.name, email: user.email, role: user.role } });
   } catch (error) {
+    console.error("Login error:", error);
     res.status(500).json({ msg: "Server error" });
   }
 });
@@ -43,9 +45,9 @@ router.post("/login", async (req, res) => {
 // Get User Profile
 router.get("/profile", auth, async (req, res) => {
   try {
-    const user = await User.findById(req.user.id).select("-password");
-    res.json(user);
+    res.json(req.user);
   } catch (error) {
+    console.error("Profile error:", error);
     res.status(500).json({ msg: "Server error" });
   }
 });
