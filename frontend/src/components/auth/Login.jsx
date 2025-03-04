@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import axios from "axios";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useAuth } from "../../context/AuthContext";
 
@@ -10,28 +10,61 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const location = useLocation();
+  const { login, user } = useAuth();
+
+  // Get redirect path from location state or default to dashboard
+  const from = location.state?.from || "/dashboard";
 
   // Redirect if already logged in
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      navigate("/dashboard");
+    if (user) {
+      navigate(from);
     }
-  }, [navigate]);
+  }, [user, navigate, from]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/login", { email, password });
+      // Make login request without withCredentials
+      const res = await axios.post("http://localhost:5000/api/auth/login", 
+        { email, password },
+        { headers: { 'Content-Type': 'application/json' } }
+      );
+      
+      // Store token in localStorage
       localStorage.setItem("token", res.data.token);
-      // Update auth context with user data
-      login(res.data.user);
+      
+      // Set axios default header for future requests
+      axios.defaults.headers.common["Authorization"] = `Bearer ${res.data.token}`;
+      
+      // Update auth context with user data and token
+      login(res.data.user, res.data.token);
+      
       toast.success("Login successful!");
-      navigate("/dashboard");
+      
+      // Navigate to the intended page or dashboard
+      navigate(from);
     } catch (err) {
-      toast.error(err.response?.data?.msg || "Login failed");
+      console.error("Login error:", err);
+      
+      // More detailed error handling
+      if (err.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        toast.error(err.response.data?.msg || "Login failed. Please check your credentials.");
+      } else if (err.request) {
+        // The request was made but no response was received
+        toast.error("No response from server. Please try again later.");
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        toast.error("Error setting up request. Please try again.");
+      }
+      
+      // Clear any existing token on login failure
+      localStorage.removeItem("token");
+      delete axios.defaults.headers.common["Authorization"];
     } finally {
       setLoading(false);
     }
@@ -72,6 +105,17 @@ const Login = () => {
             Register here
           </Link>
         </p>
+
+        {/* Show message if redirected from protected route */}
+        {location.state?.message && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mt-4 p-3 bg-blue-900 text-blue-100 rounded-md"
+          >
+            <p>{location.state.message}</p>
+          </motion.div>
+        )}
 
         <form className="mt-6 space-y-6" onSubmit={handleSubmit}>
           {/* Email Input */}

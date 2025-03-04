@@ -222,8 +222,10 @@ const MembershipForm = () => {
 
   return (
     <div className="container py-4">
+      <h1 className="h3 mb-4 border-bottom pb-2">Membership Management</h1>
+      
       {error && (
-        <Alert variant="danger" className="mb-4">
+        <Alert variant="danger" className="mb-4 border border-danger">
           <Alert.Heading>Error</Alert.Heading>
           <p>{error}</p>
           <div className="d-flex justify-content-end">
@@ -238,14 +240,14 @@ const MembershipForm = () => {
       )}
       
       {isAdmin && (
-        <Card className="shadow-sm mb-4">
-          <Card.Header className="bg-primary text-white">
+        <Card className="shadow-sm mb-4 border">
+          <Card.Header className="bg-primary text-white border-bottom">
             <h4 className="mb-0">Create New Membership</h4>
           </Card.Header>
-          <Card.Body>
+          <Card.Body className="border-bottom">
             <Form onSubmit={handleSubmit}>
               <Row>
-                <Col md={6}>
+                <Col md={6} className="border-end">
                   <Form.Group className="mb-3">
                     <Form.Label>User <span className="text-danger">*</span></Form.Label>
                     <Form.Select
@@ -255,6 +257,7 @@ const MembershipForm = () => {
                         setFormErrors({ ...formErrors, userId: null });
                       }}
                       isInvalid={!!formErrors.userId}
+                      className="border"
                     >
                       <option value="">Select User</option>
                       {users.map(user => (
@@ -267,14 +270,13 @@ const MembershipForm = () => {
                       {formErrors.userId}
                     </Form.Control.Feedback>
                   </Form.Group>
-                </Col>
-                
-                <Col md={6}>
+                  
                   <Form.Group className="mb-3">
                     <Form.Label>Membership Type</Form.Label>
                     <Form.Select
                       value={formData.type}
                       onChange={(e) => setFormData({ ...formData, type: e.target.value })}
+                      className="border"
                     >
                       <option value="standard">Standard</option>
                       <option value="premium">Premium</option>
@@ -282,9 +284,7 @@ const MembershipForm = () => {
                     </Form.Select>
                   </Form.Group>
                 </Col>
-              </Row>
-              
-              <Row>
+                
                 <Col md={6}>
                   <Form.Group className="mb-3">
                     <Form.Label>Start Date <span className="text-danger">*</span></Form.Label>
@@ -296,14 +296,13 @@ const MembershipForm = () => {
                         setFormErrors({ ...formErrors, startDate: null });
                       }}
                       isInvalid={!!formErrors.startDate}
+                      className="border"
                     />
                     <Form.Control.Feedback type="invalid">
                       {formErrors.startDate}
                     </Form.Control.Feedback>
                   </Form.Group>
-                </Col>
-                
-                <Col md={6}>
+                  
                   <Form.Group className="mb-3">
                     <Form.Label>End Date <span className="text-danger">*</span></Form.Label>
                     <Form.Control
@@ -314,21 +313,19 @@ const MembershipForm = () => {
                         setFormErrors({ ...formErrors, endDate: null });
                       }}
                       isInvalid={!!formErrors.endDate}
+                      className="border"
                     />
                     <Form.Control.Feedback type="invalid">
                       {formErrors.endDate}
                     </Form.Control.Feedback>
                   </Form.Group>
-                </Col>
-              </Row>
-              
-              <Row>
-                <Col md={6}>
+                  
                   <Form.Group className="mb-3">
                     <Form.Label>Status</Form.Label>
                     <Form.Select
                       value={formData.status}
                       onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+                      className="border"
                     >
                       <option value="active">Active</option>
                       <option value="expired">Expired</option>
@@ -338,7 +335,7 @@ const MembershipForm = () => {
                 </Col>
               </Row>
               
-              <div className="d-flex justify-content-end mt-3">
+              <div className="d-flex justify-content-end mt-3 pt-3 border-top">
                 <Button
                   variant="secondary"
                   className="me-2"
@@ -383,13 +380,13 @@ const MembershipForm = () => {
         </Card>
       )}
 
-      <Card className="shadow-sm">
-        <Card.Header className="bg-light">
+      <Card className="shadow-sm border">
+        <Card.Header className="bg-light border-bottom">
           <h4 className="mb-0">All Memberships</h4>
         </Card.Header>
         <Card.Body>
           {memberships.length === 0 ? (
-            <Alert variant="info">No memberships found.</Alert>
+            <Alert variant="info" className="border">No memberships found.</Alert>
           ) : (
             <Row xs={1} md={2} lg={3} className="g-4">
               {memberships.map(membership => (

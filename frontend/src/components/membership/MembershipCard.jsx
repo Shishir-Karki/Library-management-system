@@ -40,8 +40,8 @@ const MembershipCard = ({ membership }) => {
   };
 
   return (
-    <Card className="h-100 shadow-sm border-0">
-      <Card.Header className={`d-flex justify-content-between align-items-center ${
+    <Card className="h-100 shadow-sm border">
+      <Card.Header className={`d-flex justify-content-between align-items-center border-bottom ${
         isExpired() ? 'bg-danger text-white' : 'bg-primary text-white'
       }`}>
         <div>
@@ -50,26 +50,26 @@ const MembershipCard = ({ membership }) => {
         {getStatusBadge(membership.status)}
       </Card.Header>
       
-      <Card.Body>
-        <Card.Title className="d-flex justify-content-between align-items-center mb-3">
+      <Card.Body className="border-bottom">
+        <Card.Title className="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
           <span>{membership.userName || 'Unknown User'}</span>
           <Badge bg="info" pill>{formatType(membership.type)}</Badge>
         </Card.Title>
         
         <Card.Text as="div">
           <div className="d-flex justify-content-between mb-3">
-            <div>
+            <div className="border-end pe-2">
               <small className="text-muted d-block">Start Date</small>
               <strong>{formatDate(membership.startDate)}</strong>
             </div>
-            <div className="text-end">
+            <div className="ps-2">
               <small className="text-muted d-block">End Date</small>
               <strong>{formatDate(membership.endDate)}</strong>
             </div>
           </div>
           
           {isExpired() && (
-            <div className="alert alert-danger py-2 mb-0">
+            <div className="alert alert-danger py-2 mb-0 border">
               <small className="fw-bold">This membership has expired</small>
             </div>
           )}
@@ -81,7 +81,7 @@ const MembershipCard = ({ membership }) => {
           <Button 
             variant="outline-primary" 
             size="sm" 
-            className="me-2"
+            className="me-2 border" 
             onClick={() => membership.onEdit && membership.onEdit(membership._id)}
           >
             <i className="bi bi-pencil me-1"></i> Edit
@@ -89,6 +89,7 @@ const MembershipCard = ({ membership }) => {
           <Button 
             variant="outline-danger" 
             size="sm"
+            className="border-yellow-50"
             onClick={() => membership.onDelete && membership.onDelete(membership._id)}
           >
             <i className="bi bi-trash me-1"></i> Delete
