@@ -95,7 +95,7 @@ const MembershipApplication = () => {
       
       console.log('Submitting membership application:', formData);
       
-      const response = await axios.post('/api/memberships/apply', formData, {
+      const response = await axios.post('https://library-management-system-1-53kq.onrender.com/api/memberships/apply', formData, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
