@@ -29,7 +29,7 @@ const MembershipApplication = () => {
   useEffect(() => {
     const fetchMembershipTypes = async () => {
       try {
-        const response = await axios.get('https://library-management-system-1-53kq.onrender.com/api/books/api/membership-types');
+        const response = await axios.get('https://library-management-system-1-53kq.onrender.com/api/membership-types');
         console.log('Fetched membership types:', response.data);
         
         if (response.data && response.data.length > 0) {

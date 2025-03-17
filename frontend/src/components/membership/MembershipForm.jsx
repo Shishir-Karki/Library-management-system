@@ -40,7 +40,7 @@ const MembershipForm = () => {
         return;
       }
       
-      const response = await axios.get('https://library-management-system-1-53kq.onrender.com/api/books/api/memberships', {
+      const response = await axios.get('https://library-management-system-1-53kq.onrender.com/api/memberships', {
         headers: { 
           'Authorization': `Bearer ${token}`
         }

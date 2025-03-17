@@ -18,7 +18,7 @@ const BookList = () => {
   const fetchBooks = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.get('https://library-management-system-1-53kq.onrender.com/api/books/api/books');
+      const response = await axios.get('https://library-management-system-1-53kq.onrender.com/api/books');
       setBooks(response.data);
     } catch (error) {
       toast.error('Error fetching books');

@@ -22,7 +22,7 @@ const UserMemberships = () => {
         }
 
         // Use the new endpoint
-        const response = await axios.get('https://library-management-system-1-53kq.onrender.com/api/books/api/memberships/my', {
+        const response = await axios.get('https://library-management-system-1-53kq.onrender.com/api/memberships/my', {
           headers: {
             'Authorization': `Bearer ${token}`
           }

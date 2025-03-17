@@ -19,7 +19,7 @@ const UpdateBook = () => {
   useEffect(() => {
     const fetchBook = async () => {
       try {
-        const response = await axios.get(`https://library-management-system-1-53kq.onrender.com/api/books/api/books/${id}`);
+        const response = await axios.get(`https://library-management-system-1-53kq.onrender.com/api/books/${id}`);
         setFormData(response.data);
       } catch (error) {
         toast.error('Error fetching book details');

@@ -15,7 +15,7 @@ const AddBook = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('https://library-management-system-1-53kq.onrender.com/api/books/api/books', formData);
+      await axios.post('https://library-management-system-1-53kq.onrender.com/api/books', formData);
       toast.success('Book added successfully');
       setFormData({
         title: '',

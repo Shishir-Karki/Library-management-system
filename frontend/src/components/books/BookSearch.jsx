@@ -14,7 +14,7 @@ const BookSearch = ({ onSearchResults }) => {
 
     setIsLoading(true);
     try {
-      const response = await axios.get(`https://library-management-system-1-53kq.onrender.com/api/booksapi/books/search?query=${searchQuery}`);
+      const response = await axios.get(`https://library-management-system-1-53kq.onrender.com/api/books/search?query=${searchQuery}`);
       onSearchResults(response.data);
     } catch (error) {
       toast.error('Error searching books');

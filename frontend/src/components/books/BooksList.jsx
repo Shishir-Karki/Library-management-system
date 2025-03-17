@@ -58,7 +58,7 @@ const BooksList = () => {
 
   const fetchGenres = async () => {
     try {
-      const response = await axios.get('https://library-management-system-1-53kq.onrender.com/api/books/api/books/genres');
+      const response = await axios.get('https://library-management-system-1-53kq.onrender.com/api/books/genres');
       setGenres(response.data);
     } catch (error) {
       console.error('Error fetching genres:', error);
