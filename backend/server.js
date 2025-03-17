@@ -3,15 +3,18 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 require('dotenv').config();
 const connectDB = require('./config/db');
-const dotenv = require('dotenv');
-// Import the middleware
+
+// Import middleware
 const { auth, admin } = require('./middleware/authmiddleware');
 
 const app = express();
 
-// CORS configuration
+// ✅ Update CORS configuration
 const corsOptions = {
-  origin: 'http://localhost:3000', // Your frontend URL
+  origin: [
+    'https://library-management-system-one-ruby.vercel.app', // Frontend URL on Vercel
+    'http://localhost:3000' // Allow local development
+  ],
   credentials: true, // Allow credentials (cookies, authorization headers)
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
@@ -36,12 +39,15 @@ app.use('/api/membership-types', require('./routes/membershipTypeRoute'));
 // Import routes
 const userRoutes = require('./routes/userRoute');
 const membershipRoutes = require('./routes/membershipRoute');
-const adminRoutes = require('./routes/adminRoute'); // New admin routes
+const adminRoutes = require('./routes/adminRoute');
 
 // Use routes with appropriate prefixes
 app.use('/api/users', userRoutes);
 app.use('/api/memberships', membershipRoutes);
-app.use('/api/admin', adminRoutes); // No middleware here, it's in the routes file instead
+app.use('/api/admin', adminRoutes);
+
+// ✅ Handle preflight (OPTIONS) requests
+app.options('*', cors(corsOptions));
 
 // Error handling middleware
 app.use((err, req, res, next) => {
@@ -49,9 +55,9 @@ app.use((err, req, res, next) => {
   res.status(500).json({ message: 'Something went wrong!', error: err.message });
 });
 
-// Debug route registration (add near end of file, before listen)
-app._router.stack.forEach(function(r){
-  if (r.route && r.route.path){
+// Debug route registration
+app._router.stack.forEach(function (r) {
+  if (r.route && r.route.path) {
     console.log(`Route registered: ${Object.keys(r.route.methods)} ${r.route.path}`);
   }
 });
