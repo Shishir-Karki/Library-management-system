@@ -57,7 +57,7 @@ export const AuthProvider = ({ children }) => {
           axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
           
           // Get user data
-          const res = await axios.get('http://localhost:5000/api/auth/profile', {
+          const res = await axios.get('https://library-management-system-1-53kq.onrender.com/api/auth/profile', {
             headers: { 'Authorization': `Bearer ${token}` }
           });
           
