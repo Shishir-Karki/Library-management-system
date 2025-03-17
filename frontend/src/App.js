@@ -34,8 +34,7 @@ import UserMemberships from './components/membership/UserMemberships';
 import MembershipApplication from './components/membership/MembershipApplication';
 
 // User Management
-import UserManagement from './pages/Maintenance/UserManagement';
-import UserManagementCards from './pages/Maintenance/UserManagementCards';
+
 
 // User Profile Component
 import UserProfile from './components/profile/UserProfile';
@@ -184,30 +183,8 @@ function AppContent() {
               </ProtectedRoute>
             } 
           />
-          <Route 
-            path="/maintenance/membership" 
-            element={
-              <ProtectedRoute adminOnly>
-                <MembershipManagement />
-              </ProtectedRoute>
-            } 
-          />
-          <Route 
-            path="/maintenance/users" 
-            element={
-              <ProtectedRoute adminOnly>
-                <UserManagement />
-              </ProtectedRoute>
-            } 
-          />
-          <Route 
-            path="/maintenance/users-cards" 
-            element={
-              <ProtectedRoute adminOnly>
-                <UserManagementCards />
-              </ProtectedRoute>
-            } 
-          />
+         
+         
           <Route 
             path="/admin" 
             element={

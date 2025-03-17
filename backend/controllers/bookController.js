@@ -37,27 +37,51 @@ exports.getBookById = async (req, res) => {
 // @access  Admin
 exports.addBook = async (req, res) => {
   try {
-    const { title, author, genre, serialNumber, type } = req.body;
+    const { title, author, serialNumber, genre, description, publishedYear, quantity } = req.body;
     
-    // Check if serial number already exists
-    const existingBook = await Book.findOne({ serialNumber });
+    // Generate serial number if not provided
+    const bookSerialNumber = serialNumber || `BOOK${Math.floor(100000 + Math.random() * 900000)}`;
+    
+    // Check if a book with this serial number already exists
+    const existingBook = await Book.findOne({ serialNumber: bookSerialNumber });
     if (existingBook) {
-      return res.status(400).json({ msg: 'Serial number already exists' });
+      return res.status(400).json({ 
+        message: 'A book with this serial number already exists' 
+      });
     }
-
-    const book = new Book({
+    
+    // Create new book
+    const newBook = new Book({
       title,
       author,
+      serialNumber: bookSerialNumber,
       genre,
-      serialNumber,
-      type
+      description,
+      publishedYear,
+      quantity: quantity || 1
     });
-
-    await book.save();
-    res.status(201).json(book);
+    
+    // Save book
+    const savedBook = await newBook.save();
+    
+    res.status(201).json({
+      message: 'Book added successfully',
+      book: savedBook
+    });
   } catch (error) {
     console.error('Error adding book:', error);
-    res.status(500).json({ msg: error.message });
+    
+    // Handle duplicate key error
+    if (error.code === 11000) {
+      return res.status(400).json({ 
+        message: 'A book with this serial number already exists' 
+      });
+    }
+    
+    res.status(500).json({ 
+      message: 'Server error', 
+      error: error.message 
+    });
   }
 };
 

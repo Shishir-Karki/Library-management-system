@@ -3,18 +3,8 @@ const router = express.Router();
 const { auth, admin } = require("../middleware/authmiddleware");
 const membershipController = require("../controllers/membershipController");
 
-// IMPORTANT: Define a completely separate router for admin functionalities
-// This avoids any conflicts with other routes
-const adminRouter = express.Router();
-
-// Admin routes with namespace
-router.use('/admin', auth, admin, adminRouter);
-
-// Admin-specific endpoints
-adminRouter.get('/pending-applications', membershipController.getPendingApplications);
-adminRouter.put('/process-application/:id', membershipController.processMembershipApplication);
-
-// General user routes - MUST come after all non-parameterized routes
+// IMPORTANT: Place more specific routes BEFORE parameterized routes
+// Get all memberships for the current logged-in user
 router.get("/my", auth, membershipController.getUserMemberships);
 
 // Get all memberships
@@ -34,5 +24,9 @@ router.delete("/:id", auth, admin, membershipController.deleteMembership);
 
 // Route for applying for a membership
 router.post('/apply', auth, membershipController.applyForMembership);
+
+// Admin routes for managing applications
+router.get('/pending', auth, admin, membershipController.getPendingApplications);
+router.put('/process/:id', auth, admin, membershipController.processMembershipApplication);
 
 module.exports = router;

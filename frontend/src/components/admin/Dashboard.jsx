@@ -34,16 +34,7 @@ const AdminDashboard = () => {
           >
             Members
           </button>
-          <button
-            className={`py-4 px-1 border-b-2 font-medium text-sm ${
-              activeTab === 'settings'
-                ? 'border-blue-500 text-blue-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-            }`}
-            onClick={() => setActiveTab('settings')}
-          >
-            Settings
-          </button>
+         
         </nav>
       </div>
       
@@ -51,7 +42,6 @@ const AdminDashboard = () => {
       <div>
         {activeTab === 'applications' && <MembershipApplications />}
         {activeTab === 'members' && <Members />}
-        {activeTab === 'settings' && <div>Settings panel will go here</div>}
       </div>
     </div>
   );
