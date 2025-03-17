@@ -25,7 +25,7 @@ const BookDetail = () => {
   const fetchBookDetails = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`/api/books/${id}`);
+      const response = await axios.get(`https://library-management-system-1-53kq.onrender.com/api/books/api/books/${id}`);
       setBook(response.data);
       setLoading(false);
     } catch (error) {

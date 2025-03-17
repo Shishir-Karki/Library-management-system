@@ -31,7 +31,7 @@ const MemberEdit = () => {
       setLoading(true);
       
       const token = localStorage.getItem('token');
-      const response = await axios.get(`/api/admin/users/${id}`, {
+      const response = await axios.get(`https://library-management-system-1-53kq.onrender.com/api/admin/users/${id}`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }

@@ -30,7 +30,7 @@ const MembershipApplications = () => {
       
       console.log('Fetching pending membership applications...');
       
-      const response = await axios.get('/api/admin/memberships/pending', {
+      const response = await axios.get('https://library-management-system-1-53kq.onrender.com/api/admin/memberships/pending', {
         headers: {
           'Authorization': `Bearer ${token}`
         }

@@ -43,7 +43,7 @@ const AddBookForm = ({ onBookAdded }) => {
       setLoading(true);
       
       const token = localStorage.getItem('token');
-      const response = await axios.post('/api/books', formData, {
+      const response = await axios.post('https://library-management-system-1-53kq.onrender.com/api/books', formData, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
