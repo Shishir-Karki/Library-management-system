@@ -9,6 +9,8 @@ router.use(auth, admin);
 
 // Admin user management routes
 router.get('/users/with-memberships', userController.getAllUsersWithMemberships);
+router.get('/users/:id', userController.getUserByIdAdmin);
+router.put('/users/:id', userController.updateUserAdmin);
 
 // Admin membership management routes
 router.get('/memberships/pending', membershipController.getPendingApplications);

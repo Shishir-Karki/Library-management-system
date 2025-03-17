@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import Loading from '../common/Loading';
+import { Link } from 'react-router-dom';
 
 const Members = () => {
   const [members, setMembers] = useState([]);
@@ -252,12 +253,18 @@ const Members = () => {
                       )}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                      <a href={`/admin/members/${member._id}`} className="text-blue-600 hover:text-blue-900 mr-3">
+                      <Link 
+                        to={`/admin/members/${member._id}`} 
+                        className="text-blue-600 hover:text-blue-900 mr-3"
+                      >
                         View
-                      </a>
-                      <a href={`/admin/members/${member._id}/edit`} className="text-indigo-600 hover:text-indigo-900">
+                      </Link>
+                      <Link 
+                        to={`/admin/members/${member._id}/edit`} 
+                        className="text-indigo-600 hover:text-indigo-900"
+                      >
                         Edit
-                      </a>
+                      </Link>
                     </td>
                   </tr>
                 ))}

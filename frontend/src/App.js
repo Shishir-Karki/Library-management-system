@@ -42,6 +42,8 @@ import UserProfile from './components/profile/UserProfile';
 
 // Admin Components
 import AdminDashboard from './components/admin/Dashboard';
+import MemberDetail from './components/admin/MemberDetail';
+import MemberEdit from './components/admin/MemberEdit';
 
 // Set up axios defaults
 axios.defaults.baseURL = 'http://localhost:5000';
@@ -211,6 +213,22 @@ function AppContent() {
             element={
               <ProtectedRoute adminOnly={true}>
                 <AdminDashboard />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/admin/members/:id" 
+            element={
+              <ProtectedRoute adminOnly={true}>
+                <MemberDetail />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/admin/members/:id/edit" 
+            element={
+              <ProtectedRoute adminOnly={true}>
+                <MemberEdit />
               </ProtectedRoute>
             } 
           />

@@ -305,6 +305,84 @@ const getAllUsersWithMemberships = async (req, res) => {
   }
 };
 
+// Get a user by ID with membership details (admin only)
+const getUserByIdAdmin = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id)
+      .select('-password')
+      .populate('membership');
+    
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    
+    res.status(200).json(user);
+  } catch (error) {
+    console.error('Error in getUserByIdAdmin:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
+// Update a user and their membership (admin only)
+const updateUserAdmin = async (req, res) => {
+  try {
+    const { name, email, role, membership } = req.body;
+    
+    // Find the user
+    const user = await User.findById(req.params.id);
+    
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    
+    // Update user fields
+    user.name = name || user.name;
+    user.email = email || user.email;
+    
+    // Update role/admin status
+    if (role === 'admin') {
+      user.isAdmin = true;
+      user.role = 'admin';
+    } else {
+      user.isAdmin = false;
+      user.role = 'user';
+    }
+    
+    // Save user changes
+    await user.save();
+    
+    // If membership data is provided and user has a membership, update it
+    if (membership && user.membership) {
+      const membershipDoc = await Membership.findById(user.membership);
+      
+      if (membershipDoc) {
+        // Update membership fields
+        membershipDoc.type = membership.type || membershipDoc.type;
+        membershipDoc.status = membership.status || membershipDoc.status;
+        
+        if (membership.validUntil) {
+          membershipDoc.validUntil = new Date(membership.validUntil);
+        }
+        
+        membershipDoc.notes = membership.notes || membershipDoc.notes;
+        
+        // Save membership changes
+        await membershipDoc.save();
+      }
+    }
+    
+    // Return the updated user with membership
+    const updatedUser = await User.findById(req.params.id)
+      .select('-password')
+      .populate('membership');
+    
+    res.status(200).json(updatedUser);
+  } catch (error) {
+    console.error('Error in updateUserAdmin:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
 // Debug helper - print all available controller methods
 console.log('Available controller methods:');
 for (const key in exports) {
@@ -320,5 +398,7 @@ module.exports = {
   getUserById,
   updateUser,
   deleteUser,
-  getAllUsersWithMemberships
+  getAllUsersWithMemberships,
+  getUserByIdAdmin,
+  updateUserAdmin
 };
