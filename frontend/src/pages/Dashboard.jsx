@@ -33,7 +33,7 @@ const Dashboard = () => {
 
   const fetchRecentBooks = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/books');
+      const response = await axios.get('https://library-management-system-1-53kq.onrender.com/api/books');
       setRecentBooks(response.data.slice(0, 5));
     } catch (error) {
       console.error('Error fetching recent books:', error);
