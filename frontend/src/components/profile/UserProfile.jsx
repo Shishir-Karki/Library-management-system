@@ -26,7 +26,7 @@ const UserProfile = () => {
         };
 
         console.log("Fetching user profile...");
-        const response = await axios.get('/api/users/profile', config);
+        const response = await axios.get('https://library-management-system-1-53kq.onrender.com/api/users/profile', config);
         console.log("User profile data:", response.data);
         
         setUserProfile(response.data);
