@@ -45,7 +45,7 @@ const Dashboard = () => {
     if (!user || !user.id) return;
     
     try {
-      const response = await axios.get(`http://localhost:5000/api/memberships/user/${user.id}`);
+      const response = await axios.get(`https://library-management-system-1-53kq.onrender.com/api/memberships/user/${user.id}`);
       setUserMembership(response.data);
     } catch (error) {
       console.error('Error fetching membership:', error);
