@@ -1,5 +1,7 @@
 const Membership = require('../models/Membership');
 const User = require('../models/User');
+const MembershipType = require('../models/MembershipType');
+const mongoose = require('mongoose');
 
 // Helper function to generate a unique membership number
 const generateMembershipNumber = async () => {
@@ -208,5 +210,175 @@ exports.deleteMembership = async (req, res) => {
   } catch (error) {
     console.error('Error deleting membership:', error);
     res.status(500).json({ msg: error.message });
+  }
+};
+
+// Add this method to handle user memberships
+exports.getUserMemberships = async (req, res) => {
+  try {
+    console.log('Fetching memberships for user:', req.user.id);
+    
+    // Find memberships where the user field matches the current user's ID
+    const memberships = await Membership.find({ user: req.user.id });
+    
+    console.log('Found memberships:', memberships);
+    res.status(200).json(memberships);
+  } catch (error) {
+    console.error('Error in getUserMemberships:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
+// Apply for membership
+exports.applyForMembership = async (req, res) => {
+  try {
+    const { type, duration } = req.body;
+    
+    // Get the user
+    const user = await User.findById(req.user.id);
+    
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    
+    // Prevent admins from applying
+    if (user.isAdmin || user.role === 'admin') {
+      return res.status(403).json({ 
+        message: 'Administrators cannot apply for memberships'
+      });
+    }
+    
+    // Check if user already has an active or pending membership
+    const existingMembership = await Membership.findOne({ 
+      user: req.user.id,
+      status: { $in: ['active', 'pending'] }
+    });
+    
+    if (existingMembership) {
+      return res.status(400).json({ 
+        message: existingMembership.status === 'active' 
+          ? 'You already have an active membership' 
+          : 'You already have a pending membership application'
+      });
+    }
+    
+    // Verify membership type exists
+    let membershipTypeData = {};
+    try {
+      const membershipType = await MembershipType.findById(type);
+      if (!membershipType) {
+        // If not found by ID, try looking up by name
+        const typeByName = await MembershipType.findOne({ name: type });
+        if (!typeByName) {
+          return res.status(404).json({ message: 'Invalid membership type' });
+        }
+        membershipTypeData = typeByName;
+      } else {
+        membershipTypeData = membershipType;
+      }
+    } catch (error) {
+      console.log('Error finding membership type:', error);
+      // If the type doesn't exist or there's an error, use a default name
+      membershipTypeData = { name: type };
+    }
+    
+    // Generate a random membership number
+    const membershipNumber = 'MEM' + Math.floor(10000 + Math.random() * 90000);
+    
+    // Calculate the validity period
+    const validUntil = new Date();
+    validUntil.setMonth(validUntil.getMonth() + parseInt(duration || 12));
+    
+    // Create a new membership
+    const newMembership = new Membership({
+      user: req.user.id,
+      membershipNumber,
+      type: membershipTypeData.name || type,
+      status: 'pending', // Start with pending status until approved
+      validUntil,
+      notes: 'Applied online. Pending approval.'
+    });
+    
+    console.log('Creating membership:', newMembership);
+    
+    const savedMembership = await newMembership.save();
+    
+    // Update the user with the membership reference
+    user.membership = savedMembership._id;
+    await user.save();
+    
+    res.status(201).json({
+      message: 'Membership application submitted successfully',
+      membership: savedMembership
+    });
+  } catch (error) {
+    console.error('Error in applyForMembership:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
+// Get pending applications
+exports.getPendingApplications = async (req, res) => {
+  try {
+    console.log('Fetching pending applications for admin');
+    
+    // Use the correct status field, not the ID
+    const pendingMemberships = await Membership.find({ status: 'pending' })
+      .populate('user', 'name email')
+      .sort({ createdAt: -1 });
+    
+    console.log(`Found ${pendingMemberships.length} pending applications`);
+    
+    return res.status(200).json(pendingMemberships);
+  } catch (error) {
+    console.error('Error fetching pending applications:', error);
+    return res.status(500).json({ 
+      message: 'Server error', 
+      error: error.message 
+    });
+  }
+};
+
+// Approve or reject a membership application (admin only)
+exports.processMembershipApplication = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status, notes } = req.body;
+    
+    if (!['active', 'rejected'].includes(status)) {
+      return res.status(400).json({ message: 'Invalid status. Must be "active" or "rejected"' });
+    }
+    
+    const membership = await Membership.findById(id);
+    
+    if (!membership) {
+      return res.status(404).json({ message: 'Membership application not found' });
+    }
+    
+    if (membership.status !== 'pending') {
+      return res.status(400).json({ message: 'Only pending applications can be processed' });
+    }
+    
+    // Update the membership status
+    membership.status = status;
+    
+    // Update notes based on new status
+    if (status === 'active') {
+      // If specific notes are provided, use them, otherwise set a default message
+      membership.notes = notes || `Approved on ${new Date().toLocaleDateString()}. Membership is now active.`;
+    } else if (status === 'rejected') {
+      // If specific notes are provided, use them, otherwise set a default message
+      membership.notes = notes || `Rejected on ${new Date().toLocaleDateString()}.`;
+    }
+    
+    await membership.save();
+    
+    res.status(200).json({
+      message: `Membership application ${status === 'active' ? 'approved' : 'rejected'}`,
+      membership
+    });
+  } catch (error) {
+    console.error('Error processing application:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
   }
 };

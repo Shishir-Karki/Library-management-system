@@ -100,11 +100,22 @@ const loginUser = async (req, res) => {
 // @access  Private
 const getUserProfile = async (req, res) => {
   try {
-    const user = await User.findById(req.user.id).select('-password');
+    const user = await User.findById(req.user.id)
+      .populate('membership')
+      .select('-password');
+    
     if (!user) {
       return res.status(404).json({ msg: 'User not found' });
     }
-    res.json(user);
+
+    res.json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      membership: user.membership // This will include the full membership details
+    });
+
   } catch (error) {
     console.error('Error in getUserProfile:', error);
     res.status(500).json({ msg: 'Server error', error: error.message });
@@ -250,6 +261,56 @@ const deleteUser = async (req, res) => {
   }
 };
 
+// Define the getAllUsersWithMemberships function as a properly named, exported function
+const getAllUsersWithMemberships = async (req, res) => {
+  try {
+    // Get query parameters for filtering
+    const { status, role } = req.query;
+    
+    // Build query object
+    const query = {};
+    
+    // Add role filter if provided
+    if (role) {
+      query.role = role;
+    }
+    
+    console.log('Fetching users with memberships, query:', query);
+    
+    // Find all users and populate their membership data
+    const users = await User.find(query)
+      .select('-password')
+      .populate('membership')
+      .sort({ createdAt: -1 });
+    
+    console.log(`Found ${users.length} users`);
+    
+    // Filter by membership status after populating
+    let filteredUsers = users;
+    if (status) {
+      filteredUsers = users.filter(user => 
+        user.membership && user.membership.status === status
+      );
+      console.log(`Filtered to ${filteredUsers.length} users with status: ${status}`);
+    }
+    
+    return res.status(200).json(filteredUsers);
+  } catch (error) {
+    console.error('Error fetching users with memberships:', error);
+    return res.status(500).json({ 
+      message: 'Server error', 
+      error: error.message,
+      stack: process.env.NODE_ENV === 'production' ? undefined : error.stack
+    });
+  }
+};
+
+// Debug helper - print all available controller methods
+console.log('Available controller methods:');
+for (const key in exports) {
+  console.log(` - ${key}`);
+}
+
 module.exports = {
   registerUser,
   loginUser,
@@ -258,5 +319,6 @@ module.exports = {
   getUsers,
   getUserById,
   updateUser,
-  deleteUser
+  deleteUser,
+  getAllUsersWithMemberships
 };

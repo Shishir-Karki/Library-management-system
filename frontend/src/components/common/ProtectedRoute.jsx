@@ -1,35 +1,23 @@
-import { Navigate, useLocation } from 'react-router-dom';
+import React from 'react';
+import { Navigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import Loading from './Loading';
 
 const ProtectedRoute = ({ children, adminOnly = false }) => {
-  const { user, isAdmin, loading, tokenChecked } = useAuth();
-  const location = useLocation();
-
-  // Show loading spinner while checking authentication
-  if (loading || !tokenChecked) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <div className="text-center">
-          <Loading size="lg" />
-          <p className="mt-3 text-gray-600">Verifying your session...</p>
-        </div>
-      </div>
-    );
+  const { user, loading } = useAuth();
+  
+  if (loading) {
+    return <Loading />;
   }
-
-  // Redirect to login if not authenticated
+  
   if (!user) {
-    return <Navigate to="/login" state={{ from: location.pathname }} />;
+    return <Navigate to="/login" />;
   }
-
-  // Redirect to dashboard if not admin but trying to access admin route
-  if (adminOnly && !isAdmin) {
-    return <Navigate to="/dashboard" state={{ 
-      message: "You don't have permission to access that page." 
-    }} />;
+  
+  if (adminOnly && (!user.isAdmin && user.role !== 'admin')) {
+    return <Navigate to="/unauthorized" />;
   }
-
+  
   return children;
 };
 

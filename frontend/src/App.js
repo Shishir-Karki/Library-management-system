@@ -20,7 +20,8 @@ import Loading from './components/common/Loading';
 // Pages
 import Home from './pages/Home';
 import Dashboard from './pages/Dashboard';
-import Maintenance from './pages/Maintenance';
+
+import Unauthorized from './pages/Unauthorized';
 
 // Book Components
 import BookList from './components/books/BookList';
@@ -30,10 +31,17 @@ import UpdateBook from './pages/Maintenance/UpdateBook';
 // Membership Components
 import MembershipManagement from './components/membership/MembershipForm';
 import UserMemberships from './components/membership/UserMemberships';
+import MembershipApplication from './components/membership/MembershipApplication';
 
 // User Management
 import UserManagement from './pages/Maintenance/UserManagement';
 import UserManagementCards from './pages/Maintenance/UserManagementCards';
+
+// User Profile Component
+import UserProfile from './components/profile/UserProfile';
+
+// Admin Components
+import AdminDashboard from './components/admin/Dashboard';
 
 // Set up axios defaults
 axios.defaults.baseURL = 'http://localhost:5000';
@@ -101,17 +109,10 @@ const AuthStateListener = () => {
 };
 
 function AppContent() {
-  const { loading } = useAuth();
+  const { user, loading } = useAuth();
 
   if (loading) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <div className="text-center">
-          <Loading size="lg" />
-          <p className="mt-4 text-gray-600">Loading application...</p>
-        </div>
-      </div>
-    );
+    return <Loading />;
   }
 
   return (
@@ -164,14 +165,7 @@ function AppContent() {
           />
 
           {/* Admin Routes */}
-          <Route 
-            path="/maintenance" 
-            element={
-              <ProtectedRoute adminOnly>
-                <Maintenance />
-              </ProtectedRoute>
-            } 
-          />
+         
           <Route 
             path="/maintenance/add-book" 
             element={
@@ -212,6 +206,14 @@ function AppContent() {
               </ProtectedRoute>
             } 
           />
+          <Route 
+            path="/admin" 
+            element={
+              <ProtectedRoute adminOnly={true}>
+                <AdminDashboard />
+              </ProtectedRoute>
+            } 
+          />
 
           {/* Membership Routes */}
           <Route 
@@ -222,6 +224,29 @@ function AppContent() {
               </ProtectedRoute>
             } 
           />
+
+          {/* User Profile Route */}
+          <Route 
+            path="/profile" 
+            element={
+              <ProtectedRoute>
+                <UserProfile />
+              </ProtectedRoute>
+            } 
+          />
+
+          {/* Membership application - block admins */}
+          <Route 
+            path="/membership/apply" 
+            element={
+              <ProtectedRoute>
+                <MembershipApplication />
+              </ProtectedRoute>
+            } 
+          />
+
+          {/* Unauthorized Route */}
+          <Route path="/unauthorized" element={<Unauthorized />} />
 
           {/* Catch-all route for 404 */}
           <Route path="*" element={

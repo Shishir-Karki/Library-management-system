@@ -22,6 +22,10 @@ const UserSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now
+  },
+  membership: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Membership'
   }
 });
 

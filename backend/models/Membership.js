@@ -1,38 +1,34 @@
 const mongoose = require('mongoose');
 
-const MembershipSchema = new mongoose.Schema({
+const membershipSchema = new mongoose.Schema({
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
   membershipNumber: {
     type: String,
     required: true,
     unique: true
   },
-  userId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
-  },
   type: {
     type: String,
-    enum: ['standard', 'premium', 'student'],
-    default: 'standard'
-  },
-  startDate: {
-    type: Date,
-    required: true
-  },
-  endDate: {
-    type: Date,
     required: true
   },
   status: {
     type: String,
-    enum: ['active', 'expired', 'pending'],
-    default: 'active'
+    enum: ['active', 'pending', 'expired', 'rejected', 'cancelled'],
+    default: 'pending'
   },
-  createdAt: {
+  validUntil: {
     type: Date,
-    default: Date.now
+    required: true
+  },
+  notes: {
+    type: String
   }
-});
+}, { timestamps: true });
 
-module.exports = mongoose.model('Membership', MembershipSchema);
+const Membership = mongoose.model('Membership', membershipSchema);
+
+module.exports = Membership;

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 
 const Navbar = () => {
-  const { user, isAdmin, logout } = useAuth();
+  const { user, logout } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const toggleMobileMenu = () => {
@@ -11,77 +11,65 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-blue-600 text-white p-4">
-      <div className="container mx-auto">
-        {/* Desktop Navigation */}
-        <div className="hidden md:flex justify-between items-center">
-          <Link to="/" className="text-lg font-bold">Library Management</Link>
-          <div className="flex items-center space-x-6">
-            <Link to="/books" className="hover:text-gray-200">Books</Link>
-            {user ? (
-              <>
-                <Link to="/dashboard" className="hover:text-gray-200">Dashboard</Link>
-                {isAdmin && <Link to="/maintenance/membership" className="hover:text-gray-200">Membership</Link>}
-                {isAdmin && <Link to="/maintenance" className="hover:text-gray-200">Maintenance</Link>}
-                <Link to="/transactions" className="hover:text-gray-200">Transactions</Link>
-                <button 
-                  onClick={logout}
-                  className="bg-red-500 px-3 py-1 rounded hover:bg-red-600"
-                >
-                  Logout
-                </button>
-              </>
-            ) : (
-              <>
-                <Link to="/login" className="hover:text-gray-200">Login</Link>
-                <Link to="/register" className="hover:text-gray-200">Register</Link>
-              </>
-            )}
-          </div>
+    <nav className="bg-gray-800 text-white">
+      <div className="container mx-auto px-4 py-3 flex justify-between items-center">
+        {/* Logo */}
+        <div>
+          <Link to="/" className="text-xl font-bold">Library System</Link>
         </div>
-
-        {/* Mobile Navigation */}
-        <div className="md:hidden flex justify-between items-center">
-          <Link to="/" className="text-lg font-bold">Library Management</Link>
-          <button 
-            onClick={toggleMobileMenu}
-            className="text-white focus:outline-none"
-          >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              {mobileMenuOpen ? (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              ) : (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+        
+        {/* Navigation Links */}
+        <div className="flex items-center space-x-4">
+          <Link to="/" className="hover:text-blue-300">Home</Link>
+          
+          {user ? (
+            <>
+              <Link to="/dashboard" className="hover:text-blue-300">Dashboard</Link>
+              <Link to="/profile" className="hover:text-blue-300">My Profile</Link>
+              
+              {/* Admin-specific links */}
+              {(user.isAdmin || user.role === 'admin') && (
+                <div className="relative group">
+                  <Link 
+                    to="/admin" 
+                    className="hover:text-blue-300 flex items-center"
+                  >
+                    <span>Admin</span>
+                    <span className="ml-1 text-xs bg-red-500 text-white rounded-full px-2 py-0.5">
+                      New
+                    </span>
+                  </Link>
+                  <div className="absolute z-10 hidden group-hover:block mt-2 bg-white text-gray-800 shadow-lg rounded-md overflow-hidden w-48">
+                    <Link 
+                      to="/admin" 
+                      className="block px-4 py-2 hover:bg-gray-100"
+                    >
+                      Admin Dashboard
+                    </Link>
+                    <Link 
+                      to="/admin" 
+                      className="block px-4 py-2 hover:bg-gray-100 border-t border-gray-200"
+                    >
+                      Pending Applications
+                    </Link>
+                  </div>
+                </div>
               )}
-            </svg>
-          </button>
+              
+              <button 
+                onClick={logout}
+                className="bg-red-500 hover:bg-red-600 px-3 py-1 rounded ml-2"
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <Link to="/login" className="hover:text-blue-300">Login</Link>
+              <Link to="/register" className="hover:text-blue-300">Register</Link>
+            </>
+          )}
         </div>
-
-        {/* Mobile Menu */}
-        {mobileMenuOpen && (
-          <div className="md:hidden mt-4 space-y-3">
-            <Link to="/books" className="block hover:text-gray-200">Books</Link>
-            {user ? (
-              <>
-                <Link to="/dashboard" className="block hover:text-gray-200">Dashboard</Link>
-                {isAdmin && <Link to="/maintenance/membership" className="block hover:text-gray-200">Membership</Link>}
-                {isAdmin && <Link to="/maintenance" className="block hover:text-gray-200">Maintenance</Link>}
-                <Link to="/transactions" className="block hover:text-gray-200">Transactions</Link>
-                <button 
-                  onClick={logout}
-                  className="block w-full text-left bg-red-500 px-3 py-1 rounded hover:bg-red-600"
-                >
-                  Logout
-                </button>
-              </>
-            ) : (
-              <>
-                <Link to="/login" className="block hover:text-gray-200">Login</Link>
-                <Link to="/register" className="block hover:text-gray-200">Register</Link>
-              </>
-            )}
-          </div>
-        )}
       </div>
     </nav>
   );

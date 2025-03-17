@@ -25,11 +25,7 @@ const Footer = () => {
                   Dashboard
                 </Link>
               </li>
-              <li>
-                <Link to="/maintenance" className="text-gray-400 hover:text-white">
-                  Maintenance
-                </Link>
-              </li>
+              
             </ul>
           </div>
           
@@ -37,8 +33,8 @@ const Footer = () => {
             <h3 className="text-lg font-bold mb-4">Contact</h3>
             <ul className="space-y-2 text-gray-400">
               <li>Email: support@library.com</li>
-              <li>Phone: (555) 123-4567</li>
-              <li>Address: 123 Library Street</li>
+              <li>Phone: (+91) 1234567</li>
+              <li>Address: Roorkee</li>
             </ul>
           </div>
         </div>
