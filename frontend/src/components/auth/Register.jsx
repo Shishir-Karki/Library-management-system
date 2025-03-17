@@ -15,7 +15,7 @@ const Register = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      await axios.post("http://localhost:5000/api/auth/register", { name, email, password });
+      await axios.post("https://library-management-system-1-53kq.onrender.com/api/auth/register", { name, email, password });
       toast.success("Registration successful! Please login.");
       navigate("/login");
     } catch (err) {

@@ -28,7 +28,7 @@ const Login = () => {
     setLoading(true);
     try {
       // Make login request without withCredentials
-      const res = await axios.post("http://localhost:5000/api/auth/login", 
+      const res = await axios.post("https://library-management-system-1-53kq.onrender.com/api/auth/login", 
         { email, password },
         { headers: { 'Content-Type': 'application/json' } }
       );

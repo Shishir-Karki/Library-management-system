@@ -9,19 +9,10 @@ const { auth, admin } = require('./middleware/authmiddleware');
 
 const app = express();
 
-// ✅ Update CORS configuration
-const corsOptions = {
-  origin: [
-    'https://library-management-system-one-ruby.vercel.app', // Frontend URL on Vercel
-    'http://localhost:3000' // Allow local development
-  ],
-  credentials: true, // Allow credentials (cookies, authorization headers)
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
-};
+// ✅ Allow CORS for any origin
+app.use(cors());
 
 // Middleware
-app.use(cors(corsOptions));
 app.use(express.json());
 
 // Connect to MongoDB
@@ -47,7 +38,7 @@ app.use('/api/memberships', membershipRoutes);
 app.use('/api/admin', adminRoutes);
 
 // ✅ Handle preflight (OPTIONS) requests
-app.options('*', cors(corsOptions));
+app.options('*', cors());
 
 // Error handling middleware
 app.use((err, req, res, next) => {
