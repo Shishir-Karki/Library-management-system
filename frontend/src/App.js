@@ -25,6 +25,7 @@ import Unauthorized from './pages/Unauthorized';
 
 // Book Components
 import BookList from './components/books/BookList';
+import BookDetail from './components/books/BookDetail';
 import AddBook from './pages/Maintenance/AddBook';
 import UpdateBook from './pages/Maintenance/UpdateBook';
 
@@ -138,6 +139,7 @@ function AppContent() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/books" element={<BookList />} />
+          <Route path="/books/:id" element={<BookDetail />} />
 
           {/* Protected Routes */}
           <Route 

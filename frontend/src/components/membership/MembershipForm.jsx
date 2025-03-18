@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useAuth } from '../../context/AuthContext';
 import MembershipCard from './MembershipCard';
 import { Alert, Button, Form, Spinner, Row, Col, Card } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 
 const MembershipForm = () => {
   const { user, isAdmin } = useAuth();
@@ -391,14 +392,18 @@ const MembershipForm = () => {
             <Row xs={1} md={2} lg={3} className="g-4">
               {memberships.map(membership => (
                 <Col key={membership._id}>
-                  <MembershipCard
-                    membership={{
-                      ...membership,
-                      userName: membership.user ? membership.user.name : 'Unknown User',
-                      onEdit: handleEdit,
-                      onDelete: handleDelete
-                    }}
-                  />
+                  <Link to={`/memberships/${membership._id}`} className="group">
+                    <div className="bg-white rounded-lg shadow-md overflow-hidden h-full transition-transform transform group-hover:scale-105">
+                      <MembershipCard
+                        membership={{
+                          ...membership,
+                          userName: membership.user ? membership.user.name : 'Unknown User',
+                          onEdit: handleEdit,
+                          onDelete: handleDelete
+                        }}
+                      />
+                    </div>
+                  </Link>
                 </Col>
               ))}
             </Row>

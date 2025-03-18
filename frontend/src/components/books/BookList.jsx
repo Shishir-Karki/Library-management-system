@@ -94,7 +94,9 @@ const BookList = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {books.map((book) => (
             <div key={book._id} className="relative">
-              <BookCard book={book} />
+              <Link to={`/books/${book._id}`} className="block">
+                <BookCard book={book} />
+              </Link>
               {isAdmin && (
                 <div className="absolute top-2 right-2 space-x-2">
                   <Link
