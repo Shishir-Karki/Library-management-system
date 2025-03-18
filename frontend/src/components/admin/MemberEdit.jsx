@@ -85,7 +85,7 @@ const MemberEdit = () => {
       setSaving(true);
       
       const token = localStorage.getItem('token');
-      await axios.put(`/api/admin/users/${id}`, formData, {
+      await axios.put(`https://library-management-system-1-53kq.onrender.com/api/admin/users/${id}`, formData, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
